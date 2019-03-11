@@ -106,5 +106,9 @@ venv.bak/
 # Development
 *.db
 .idea
+.vscode
 logs/*
 !logs/.gitkeep
+
+
+# 

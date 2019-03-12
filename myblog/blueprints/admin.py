@@ -38,23 +38,6 @@ def manage_post():
     return render_template('admin/manage_post.html', page=page, pagination=pagination, posts=posts)
 
 
-@admin_bp.route('/post/new/ck', methods=['GET', 'POST'])
-@login_required
-def new_post2():
-    form = PostForm()
-    if form.validate_on_submit():
-        title = form.title.data
-        body = form.body.data
-        category = Category.query.get(form.category.data)
-        print(form.category.data, type(form.category.data))
-        post = Post(title=title, body=body, category=category)
-        db.session.add(post)
-        db.session.commit()
-        flash('Post created.', 'success')
-        return redirect(url_for('blog.show_post', post_id=post.id))
-    return render_template('admin/new_post.html', form=form)
-
-
 @admin_bp.route('/post/new', methods=['GET', 'POST'])
 @login_required
 def new_post():
@@ -64,7 +47,7 @@ def new_post():
         content = file.read().decode('utf-8')
         yaml_config = yaml.load(content.split("---")[1].replace('\t', ' '))
         title = yaml_config.get('title')
-        body = markdown.markdown(content.split("---")[2],
+        body = markdown.markdown(''.join(content.split("---")[2:]),
                                  extensions=['markdown.extensions.extra', 'markdown.extensions.codehilite',
                                              'markdown.extensions.tables', 'markdown.extensions.toc'])
 
